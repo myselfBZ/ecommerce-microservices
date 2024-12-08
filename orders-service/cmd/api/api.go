@@ -1,9 +1,10 @@
 package main
 
 import (
-	"inventory-service/internal/store"
 	"log"
 	"net/http"
+	grpc "oreders-service/internal/gRPC"
+	"oreders-service/internal/store"
 )
 
 func NewAPI() *API {
@@ -12,21 +13,26 @@ func NewAPI() *API {
 		log.Fatalf("error connecting to database: %v", err)
 	}
 	log.Println("connected to the db")
+	usrClient := grpc.NewUserClient("localhost:50051")
+	inventoryClient := grpc.NewInventoryClient("localhost:784324")
 	return &API{
-		store: s,
+		store:           s,
+		userClient:      usrClient,
+		inventoryClient: inventoryClient,
 	}
 }
 
 type API struct {
-	store store.Store
+	store           store.Store
+	userClient      *grpc.UserClient
+	inventoryClient *grpc.InventoryClient
 }
 
 // godoc
 // @Summary 	mounts all the routes and handlers
 func (a *API) mount() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("POST /products", makeHTTPHandler(a.createProduct, http.MethodPost))
-	mux.HandleFunc("PUT /products/{id}", makeHTTPHandler(a.updateProduct, http.MethodPut))
+	mux.HandleFunc("POST /orders", makeHTTPHandler(a.placeOrder, http.MethodPost))
 	return mux
 }
 

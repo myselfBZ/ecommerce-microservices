@@ -15,3 +15,17 @@ func NewPostgre() (*PostgreStore, error) {
 		db: db,
 	}, nil
 }
+
+func (s *PostgreStore) GetOrders() {
+
+}
+
+func (s *PostgreStore) GetByID() {
+
+}
+
+func (s *PostgreStore) PlaceOrder(o *Order) error {
+	q := `INSERT INTO orders(product_id, user_id, quantity, price, address) VALUES($1, $2, $3, $4, $5)`
+	_, err := s.db.Exec(q, o.ProductId, o.UserId, o.ProductQuantity, o.Address)
+	return err
+}
