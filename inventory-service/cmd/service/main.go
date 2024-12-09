@@ -1,6 +1,7 @@
 package main
 
 import (
+	"inventory-service/internal/store"
 	"log"
 	"net"
 
@@ -10,7 +11,13 @@ import (
 
 func main() {
 	server := grpc.NewServer()
-	pb.RegisterInventoryServiceServer(server, &InventoryServer{})
+	store, err := store.NewPostgre()
+	if err != nil {
+		log.Fatal("error connecting to the database: ", err)
+	}
+	pb.RegisterInventoryServiceServer(server, &InventoryServer{
+		store: store,
+	})
 	ln, err := net.Listen("tcp", ":50052")
 	if err != nil {
 		log.Fatal("error listening: ", err)
