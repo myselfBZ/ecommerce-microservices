@@ -122,25 +122,6 @@ func (a *API) placeOrder(w http.ResponseWriter, r *http.Request) *apiResponse {
 
 }
 
-// TODO test the rpc
-func (a *API) fetchProduct(w http.ResponseWriter, r *http.Request) {
-	prod := map[string]int{}
-	if err := readJSON(r, &prod); err != nil {
-		w.Write([]byte("wrong payload"))
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	resp, err := a.inventoryClient.GetProductById(prod["product_id"])
-	if err != nil {
-		log.Println("error: ", err)
-		w.Write([]byte("error"))
-		return
-	}
-
-	log.Printf("id: %v, price:%v, quantity: %v", resp.GetProductId(), resp.GetPrice(), resp.GetQuantity())
-	w.Write([]byte("working perfectly fine"))
-}
-
 func isEnough(orderQnt int, inStock int) bool {
 	return inStock >= orderQnt
 }

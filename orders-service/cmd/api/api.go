@@ -35,7 +35,6 @@ type API struct {
 func (a *API) mount() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /orders", makeHTTPHandler(a.placeOrder, http.MethodPost))
-	mux.HandleFunc("GET /product-service", a.fetchProduct)
 	return mux
 }
 
