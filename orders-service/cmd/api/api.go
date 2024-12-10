@@ -1,25 +1,24 @@
 package main
 
 import (
-	//"log"
+	"log"
 	"net/http"
 	grpc "oreders-service/internal/gRPC"
 	"oreders-service/internal/store"
 )
 
 func NewAPI() *API {
-	/*s, err := store.NewPostgre()
+	s, err := store.NewPostgre()
 	if err != nil {
 		log.Fatalf("error connecting to database: %v", err)
 	}
 	log.Println("connected to the db")
 
-	usrClient := grpc.NewUserClient("localhost:")
-	*/
+	usrClient := grpc.NewUserClient("localhost:5423")
 	inventoryClient := grpc.NewInventoryClient("localhost:50052")
 	return &API{
-		//store:           s,
-		//userClient:      usrClient,
+		store:           s,
+		userClient:      usrClient,
 		inventoryClient: inventoryClient,
 	}
 }

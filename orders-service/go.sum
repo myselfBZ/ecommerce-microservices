@@ -1,3 +1,5 @@
+github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
+github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
 github.com/myselfBZ/common-grpc v0.0.0-20241208082237-10a85e2a7db9 h1:h5cNO478OtfWr1PYRx0QSs3Y3OcUuickL3M/vjyYuu0=
 github.com/myselfBZ/common-grpc v0.0.0-20241208082237-10a85e2a7db9/go.mod h1:j+qZQSLdNzgfmyMZfAY7byBJLq7uI5pF1WBTLWAbwWw=
 github.com/myselfBZ/common-grpc v0.0.0-20241208114821-e3138a086b0f h1:HBzRS1OYOzaAhnWkAeMLy1fDCy9T0t18s9Xx2+TbwtQ=

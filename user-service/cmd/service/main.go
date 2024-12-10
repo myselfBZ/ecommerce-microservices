@@ -18,10 +18,11 @@ func main() {
 	pb.RegisterUserServiceServer(server, &UserService{
 		store: store,
 	})
-	ln, err := net.Listen("tcp", "localhost:78324")
+	ln, err := net.Listen("tcp", "localhost:5423")
 	if err != nil {
 		log.Fatal("error listening on port 78324: ", err)
 	}
+	log.Println("service is up")
 	if err := server.Serve(ln); err != nil {
 		log.Fatal("error on the server: ", err)
 	}

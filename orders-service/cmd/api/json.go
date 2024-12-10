@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -16,6 +17,7 @@ func writeJSON(w http.ResponseWriter, jsonData any, status int) {
 	w.WriteHeader(status)
 	err := json.NewEncoder(w).Encode(jsonData)
 	if err != nil {
+		log.Println("error encoding data: ", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

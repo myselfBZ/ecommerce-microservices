@@ -23,7 +23,7 @@ type PostgreStore struct {
 }
 
 func NewPostgre() (*PostgreStore, error) {
-	db, err := sql.Open("postgres", "host=localhost port=32768 user=postgres password=your_password dbname=users sslmode=disable")
+	db, err := sql.Open("postgres", "host=localhost port=32768 user=postgres password=new_password dbname=users sslmode=disable")
 	if err != nil {
 		return nil, err
 	}
@@ -45,10 +45,10 @@ func (s *PostgreStore) Delete(id int) error {
 }
 
 func (s *PostgreStore) GetById(id int) (*User, error) {
-	q := "SELECT 'id', first_name, last_name, email, role FROM users;"
+	q := "SELECT id, first_name, last_name, email FROM users;"
 	r := s.db.QueryRow(q)
 	var u User
-	err := r.Scan(&u.ID, &u.Name, &u.LastName, &u.Email, &u.Role)
+	err := r.Scan(&u.ID, &u.Name, &u.LastName, &u.Email)
 	if err != nil {
 		return nil, err
 	}

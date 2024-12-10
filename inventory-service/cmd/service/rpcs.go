@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
+	"errors"
 	"inventory-service/internal/store"
+	"log"
+	"time"
 
 	pb "github.com/myselfBZ/common-grpc/pkg"
 	"google.golang.org/grpc/codes"
@@ -29,6 +32,24 @@ func (i *InventoryServer) GetProduct(ctx context.Context, r *pb.GetProductReques
 	return resp, nil
 }
 
-func (i *InventoryServer) CreateStocktransaction(ctx context.Context, r *pb.StockTransactionRequest) (*pb.StockTransactionResponse, error) {
-	return nil, nil
+func (i *InventoryServer) CreateStockTransaction(ctx context.Context, r *pb.StockTransactionRequest) (*pb.StockTransactionResponse, error) {
+	newStckTrans := &store.StockTransaction{
+		QuantityChange: int(r.QuantityChange),
+		Product_id:     int(r.ProductId),
+		Reason:         r.Reason,
+		CreatedAt:      time.Now(),
+	}
+	err := i.store.CreateStockTransaction(newStckTrans)
+	if err != nil {
+		log.Print("error: ", err)
+		return nil, errors.New("error database error")
+	}
+	err = i.store.UpdateProduct(&store.Product{Quantity: int(r.QuantityChange)}, int(r.ProductId))
+	if err != nil {
+		log.Println("error: ", err)
+		return nil, errors.New("error database error")
+	}
+	return &pb.StockTransactionResponse{
+		Success: true,
+	}, nil
 }

@@ -43,6 +43,7 @@ func makeHTTPHandler(f apiHandler, method string) http.HandlerFunc {
 			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
+		w.Header().Set("Content-Type", "application/json")
 		apiResp := f(w, r)
 		if apiResp.Err != "" {
 			writeJSON(w, apiResp, apiResp.status)
@@ -89,7 +90,7 @@ func (a *API) placeOrder(w http.ResponseWriter, r *http.Request) *apiResponse {
 	}
 
 	if !isEnough(orderRequest.Quantity, int(prod.Quantity)) {
-		resp.status = http.StatusNoContent
+		resp.status = http.StatusNotFound
 		resp.Err = "not enough in stock"
 		return resp
 	}
@@ -107,14 +108,14 @@ func (a *API) placeOrder(w http.ResponseWriter, r *http.Request) *apiResponse {
 		log.Println("error creating stock transaction: ", err)
 		return resp
 	}
-
-	if err := a.store.PlaceOrder(newOrder(&orderRequest)); err != nil {
-		log.Println("error creating order record: ", err)
-		resp.status = http.StatusInternalServerError
-		resp.Err = errorInternalServer.Error()
-		return resp
-	}
-
+	/*
+		if err := a.store.PlaceOrder(newOrder(&orderRequest)); err != nil {
+			log.Println("error creating order record: ", err)
+			resp.status = http.StatusInternalServerError
+			resp.Err = errorInternalServer.Error()
+			return resp
+		}
+	*/
 	resp.status = http.StatusOK
 	resp.Data = successMessage
 
