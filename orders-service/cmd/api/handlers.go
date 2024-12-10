@@ -29,9 +29,9 @@ type apiResponse struct {
 }
 
 type placeOrderRequest struct {
-	ProductId int    `json:"product_id"`
-	UserId    int    `json:"user_id"`
-	Quantity  int    `json"quantity"`
+	ProductId int `json:"product_id"`
+	Quantity  int `json"quantity"`
+	user_id   int
 	Address   string `json:"address"`
 }
 
@@ -55,14 +55,16 @@ func makeHTTPHandler(f apiHandler, method string) http.HandlerFunc {
 
 func (a *API) placeOrder(w http.ResponseWriter, r *http.Request) *apiResponse {
 	resp := &apiResponse{}
+	id := r.Context().Value("user_id")
 	var orderRequest placeOrderRequest
+	orderRequest.user_id = id.(int)
 	if err := readJSON(r, &orderRequest); err != nil {
 		resp.status = http.StatusBadRequest
 		resp.Err = errorBadRequest.Error()
 		return resp
 	}
 
-	_, err := a.userClient.GetByID(orderRequest.UserId)
+	_, err := a.userClient.GetByID(orderRequest.user_id)
 
 	if err != nil {
 		if status.Code(err) == codes.NotFound {
@@ -130,7 +132,7 @@ func isEnough(orderQnt int, inStock int) bool {
 func newOrder(o *placeOrderRequest) *store.Order {
 	return &store.Order{
 		ProductId:       o.ProductId,
-		UserId:          o.UserId,
+		UserId:          o.user_id,
 		ProductQuantity: o.Quantity,
 		Address:         o.Address,
 	}
