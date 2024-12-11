@@ -59,62 +59,45 @@ func makeHTTPHandler(f apiHandler, method string) http.HandlerFunc {
 }
 
 func (a *API) createProduct(w http.ResponseWriter, r *http.Request) *apiResponse {
-	resp := &apiResponse{}
+
 	var p productCreateRequest
 	if err := readJSON(r, &p); err != nil {
-		resp.status = http.StatusBadRequest
-		resp.Err = errorBadRequest.Error()
-		return resp
+		return newApiResponse(errorBadRequest.Error(), nil, http.StatusBadRequest)
 	}
 
 	productStore := newStoreProduct(&p)
 
 	if err := a.store.CreateProduct(productStore); err != nil {
 		log.Println("error creating product: ", err)
-		resp.status = http.StatusInternalServerError
-		resp.Err = errorInternalServer.Error()
-		return resp
+		return newApiResponse(errorInternalServer.Error(), nil, http.StatusInternalServerError)
 	}
 
-	resp.status = http.StatusOK
-	resp.Data = successMessage
-	return resp
+	return newApiResponse("", successMessage, http.StatusOK)
 
 }
 
 func (a *API) updateProduct(w http.ResponseWriter, r *http.Request) *apiResponse {
-	var resp = &apiResponse{}
 	id := r.PathValue("id")
 	validId, err := strconv.Atoi(id)
 	if err != nil {
-		resp.status = http.StatusBadRequest
-		resp.Err = errorBadRequest.Error()
-		return resp
+		return newApiResponse(errorBadRequest.Error(), nil, http.StatusBadRequest)
 	}
 	var p productCreateRequest
 	if err := readJSON(r, &p); err != nil {
-		resp.status = http.StatusBadRequest
-		resp.Err = errorBadRequest.Error()
-		return resp
+		return newApiResponse(errorBadRequest.Error(), nil, http.StatusBadRequest)
 	}
 
 	storeProd := newStoreProduct(&p)
 
 	if err := a.store.UpdateProduct(storeProd, validId); err != nil {
 		if err == sql.ErrNoRows {
-			resp.status = http.StatusNotFound
-			resp.Err = errorNotFound.Error()
-			return resp
+			return newApiResponse(errorNotFound.Error(), nil, http.StatusNotFound)
 		}
 		log.Println("error updating a product: ", err)
-		resp.status = http.StatusInternalServerError
-		resp.Err = errorInternalServer.Error()
-		return resp
+		return newApiResponse(errorInternalServer.Error(), nil, http.StatusInternalServerError)
 	}
 
-	resp.status = http.StatusOK
-	resp.Data = successMessage
-	return resp
+	return newApiResponse("", successMessage, http.StatusOK)
 }
 
 func (a *API) getProducts(w http.ResponseWriter, r *http.Request) *apiResponse {
