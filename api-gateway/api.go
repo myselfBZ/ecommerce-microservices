@@ -55,8 +55,8 @@ func (a *API) handleRequests(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	forwardHeaders(resp, w)
-	io.Copy(w, resp.Body)
 	w.WriteHeader(resp.StatusCode)
+	io.Copy(w, resp.Body)
 }
 
 func (a *API) use(m Middleware) {

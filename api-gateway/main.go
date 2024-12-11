@@ -1,8 +1,11 @@
 package main
 
-import "os"
+import (
+	"log"
+	"os"
+)
 
 func main() {
 	s := NewAPI()
-	s.run(os.Getenv("server_addr"))
+	log.Println(s.run(os.Getenv("api_gateway")))
 }
