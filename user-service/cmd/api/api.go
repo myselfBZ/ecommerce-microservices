@@ -26,7 +26,7 @@ type API struct {
 // @Summary 	mounts all the routes and handlers
 func (a *API) mount() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/register", makeHTTPHandler(a.registerUser, http.MethodPost))
+	mux.HandleFunc("/users", makeHTTPHandler(a.registerUser, http.MethodPost))
 	mux.HandleFunc("/login", makeHTTPHandler(a.login, http.MethodPost))
 	mux.HandleFunc("DELETE /users/{id}", makeHTTPHandler(a.deleteAccount, http.MethodDelete))
 	mux.HandleFunc("PUT /users/{id}", makeHTTPHandler(a.updateAccount, http.MethodPut))
