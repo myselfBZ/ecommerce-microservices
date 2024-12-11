@@ -20,6 +20,7 @@ type StockTransaction struct {
 
 type Store interface {
 	GetProductByID(int) (*Product, error)
+	GetProducts() ([]*Product, error)
 	CreateProduct(*Product) error
 	CreateStockTransaction(*StockTransaction) error
 	DeleteProduct(int) error

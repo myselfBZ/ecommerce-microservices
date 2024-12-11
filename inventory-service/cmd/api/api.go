@@ -27,6 +27,7 @@ func (a *API) mount() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /products", makeHTTPHandler(a.createProduct, http.MethodPost))
 	mux.HandleFunc("PUT /products/{id}", makeHTTPHandler(a.updateProduct, http.MethodPut))
+	mux.HandleFunc("GET /products", makeHTTPHandler(a.getProducts, http.MethodGet))
 	return mux
 }
 

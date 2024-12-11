@@ -33,6 +33,14 @@ type apiResponse struct {
 	status int
 }
 
+func newApiResponse(err string, data any, status int) *apiResponse {
+	return &apiResponse{
+		status: status,
+		Data:   data,
+		Err:    err,
+	}
+}
+
 type apiHandler func(http.ResponseWriter, *http.Request) *apiResponse
 
 func makeHTTPHandler(f apiHandler, method string) http.HandlerFunc {
@@ -107,6 +115,14 @@ func (a *API) updateProduct(w http.ResponseWriter, r *http.Request) *apiResponse
 	resp.status = http.StatusOK
 	resp.Data = successMessage
 	return resp
+}
+
+func (a *API) getProducts(w http.ResponseWriter, r *http.Request) *apiResponse {
+	products, err := a.store.GetProducts()
+	if err != nil {
+		return newApiResponse(errorInternalServer.Error(), nil, http.StatusInternalServerError)
+	}
+	return newApiResponse("", products, http.StatusOK)
 }
 
 func newStoreProduct(p *productCreateRequest) *store.Product {

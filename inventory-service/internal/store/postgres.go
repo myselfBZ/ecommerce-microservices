@@ -3,6 +3,7 @@ package store
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"reflect"
 
 	_ "github.com/lib/pq"
@@ -27,6 +28,25 @@ func NewPostgre() (*PostgreStore, error) {
 	return &PostgreStore{
 		db: db,
 	}, nil
+}
+
+func (s *PostgreStore) GetProducts() ([]*Product, error) {
+	q := `SELECT id, price, quantity, description FROM products`
+	r, err := s.db.Query(q)
+	if err != nil {
+		return nil, err
+	}
+	var products []*Product
+	for r.Next() {
+		var product Product
+		err := r.Scan(&product.ID, &product.Price, &product.Quantity, &product.Description)
+		if err != nil {
+			log.Println("error scanning products from database: ", err)
+			return nil, err
+		}
+		products = append(products, &product)
+	}
+	return products, nil
 }
 
 func (s *PostgreStore) GetProductByID(id int) (*Product, error) {
