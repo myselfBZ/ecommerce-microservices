@@ -30,7 +30,7 @@ type apiResponse struct {
 
 type placeOrderRequest struct {
 	ProductId int `json:"product_id"`
-	Quantity  int `json"quantity"`
+    Quantity  int `json:"quantity"`
 	user_id   int
 	Address   string `json:"address"`
 }

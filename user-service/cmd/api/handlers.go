@@ -24,8 +24,8 @@ var (
 )
 
 type apiResponse struct {
-	Err    string `json:"error"`
-	Data   any    `json:"data"`
+	Err    string `json:"error,omitempty"`
+	Data   any    `json:"data,omitempty"`
 	status int
 }
 
@@ -127,7 +127,6 @@ func (a *API) login(w http.ResponseWriter, r *http.Request) *apiResponse {
 	}
 
 	if isValid := compareHash(login.Password, user.Password); !isValid {
-		log.Println("error comparing password: ", err)
 		resp.status = http.StatusBadRequest
 		resp.Err = errorUnableToLogin.Error()
 		return resp
