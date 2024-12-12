@@ -20,12 +20,32 @@ func NewPostgre() (*PostgreStore, error) {
 	}, nil
 }
 
-func (s *PostgreStore) GetOrders() {
-
+func (s *PostgreStore) GetOrders() ([]*Order, error) {
+	q := `SELECT id, user_id, product_id, quantity, price, address FROM orders`
+	r, err := s.db.Query(q)
+	if err != nil {
+		return nil, err
+	}
+	var orders []*Order
+	for r.Next() {
+		var order Order
+		err := r.Scan(&order.ID, &order.UserId, &order.ProductId, &order.ProductQuantity, &order.Address)
+		if err != nil {
+			return nil, err
+		}
+		orders = append(orders, &order)
+	}
+	return orders, nil
 }
 
-func (s *PostgreStore) GetByID() {
-
+func (s *PostgreStore) GetByID(id int) (*Order, error) {
+	q := `SELECT id, user_id, product_id, quantity, price, address FROM orders WHERE id = $1`
+	r := s.db.QueryRow(q, id)
+	var order Order
+	if err := r.Scan(&order.ID, &order.UserId, &order.ProductId, &order.ProductQuantity, &order.Address); err != nil {
+		return nil, err
+	}
+	return &order, nil
 }
 
 func (s *PostgreStore) PlaceOrder(o *Order) error {
