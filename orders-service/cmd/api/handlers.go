@@ -30,7 +30,7 @@ type apiResponse struct {
 
 type placeOrderRequest struct {
 	ProductId int `json:"product_id"`
-    Quantity  int `json:"quantity"`
+	Quantity  int `json:"quantity"`
 	user_id   int
 	Address   string `json:"address"`
 }
@@ -110,14 +110,14 @@ func (a *API) placeOrder(w http.ResponseWriter, r *http.Request) *apiResponse {
 		log.Println("error creating stock transaction: ", err)
 		return resp
 	}
-	/*
-		if err := a.store.PlaceOrder(newOrder(&orderRequest)); err != nil {
-			log.Println("error creating order record: ", err)
-			resp.status = http.StatusInternalServerError
-			resp.Err = errorInternalServer.Error()
-			return resp
-		}
-	*/
+
+	if err := a.store.PlaceOrder(newOrder(&orderRequest)); err != nil {
+		log.Println("error creating order record: ", err)
+		resp.status = http.StatusInternalServerError
+		resp.Err = errorInternalServer.Error()
+		return resp
+	}
+
 	resp.status = http.StatusOK
 	resp.Data = successMessage
 

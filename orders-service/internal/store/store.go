@@ -1,9 +1,9 @@
 package store
 
 type Store interface {
-	GetOrders()
+	GetOrders() ([]*Order, error)
 	PlaceOrder(*Order) error
-	GetByID()
+	GetByID(int) (*Order, error)
 }
 
 type Order struct {
