@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net"
+	"os"
 	"user-service/internal/store"
 
 	pb "github.com/myselfBZ/common-grpc/pkg"
@@ -18,7 +19,7 @@ func main() {
 	pb.RegisterUserServiceServer(server, &UserService{
 		store: store,
 	})
-	ln, err := net.Listen("tcp", "localhost:5423")
+	ln, err := net.Listen("tcp", os.Getenv("users-service"))
 	if err != nil {
 		log.Fatal("error listening on port 78324: ", err)
 	}

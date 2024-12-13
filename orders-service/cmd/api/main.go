@@ -1,6 +1,8 @@
 package main
 
+import "os"
+
 func main() {
 	s := NewAPI()
-	s.run(":8080")
+	s.run(os.Getenv("orders-api"))
 }

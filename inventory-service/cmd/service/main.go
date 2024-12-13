@@ -4,6 +4,7 @@ import (
 	"inventory-service/internal/store"
 	"log"
 	"net"
+	"os"
 
 	pb "github.com/myselfBZ/common-grpc/pkg"
 	"google.golang.org/grpc"
@@ -18,7 +19,7 @@ func main() {
 	pb.RegisterInventoryServiceServer(server, &InventoryServer{
 		store: store,
 	})
-	ln, err := net.Listen("tcp", ":50052")
+	ln, err := net.Listen("tcp", os.Getenv("inventory-service"))
 	if err != nil {
 		log.Fatal("error listening: ", err)
 	}

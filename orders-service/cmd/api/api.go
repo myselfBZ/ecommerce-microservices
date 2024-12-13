@@ -5,6 +5,7 @@ import (
 	"net/http"
 	grpc "oreders-service/internal/gRPC"
 	"oreders-service/internal/store"
+	"os"
 )
 
 func NewAPI() *API {
@@ -14,8 +15,8 @@ func NewAPI() *API {
 	}
 	log.Println("connected to the db")
 
-	usrClient := grpc.NewUserClient("localhost:5423")
-	inventoryClient := grpc.NewInventoryClient("localhost:50052")
+	usrClient := grpc.NewUserClient(os.Getenv("user-service"))
+	inventoryClient := grpc.NewInventoryClient(os.Getenv("inventory-service"))
 	return &API{
 		store:           s,
 		userClient:      usrClient,

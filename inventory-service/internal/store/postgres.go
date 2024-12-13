@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 	"reflect"
 
 	_ "github.com/lib/pq"
@@ -21,7 +22,8 @@ var fieldColums = map[string]string{
 }
 
 func NewPostgre() (*PostgreStore, error) {
-	db, err := sql.Open("postgres", "host=localhost port=32768 user=postgres password=new_password dbname=products sslmode=disable")
+	connStr := os.Getenv("postgres")
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, err
 	}

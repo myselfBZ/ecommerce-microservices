@@ -1,6 +1,8 @@
 package main
 
+import "os"
+
 func main() {
 	s := NewAPI()
-	s.run(":6969")
+	s.run(os.Getenv("user-api"))
 }
